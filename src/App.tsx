@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import ThreeCanvas from './components/ThreeCanvas';
+import ThreeHeroCanvas from './components/ThreeHeroCanvas';
+import SideSceneRail from './components/SideSceneRail';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Philosophy from './components/Philosophy';
@@ -95,8 +96,11 @@ export default function App() {
     <div data-theme={theme} style={{ minHeight: '100vh', position: 'relative' }}>
       <CustomCursor />
 
-      {/* 3D Background Canvas */}
-      <ThreeCanvas />
+      {/* 3D Kinetic Background Canvas with Camera Rail & Interactive Character */}
+      <ThreeHeroCanvas theme={theme} />
+
+      {/* Side Scene Navigation Rail */}
+      <SideSceneRail />
 
       {/* Navigation Header */}
       <Navbar

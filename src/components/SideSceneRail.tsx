@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 
 const SCENES = [
   { id: 'hero', label: 'Overview' },
-  { id: 'about', label: 'About' },
-  { id: 'pillars', label: 'Pillars' },
+  { id: 'philosophy', label: 'Philosophy' },
+  { id: 'projects', label: 'Projects' },
   { id: 'experience', label: 'Experience' },
-  { id: 'projects', label: 'Architecture' },
-  { id: 'certifications', label: 'Credentials' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'services', label: 'Services' },
   { id: 'contact', label: 'Contact' },
 ]
 
@@ -15,7 +15,7 @@ export default function SideSceneRail() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPos = window.scrollY + 250
+      const scrollPos = window.scrollY + 220
       for (let i = SCENES.length - 1; i >= 0; i--) {
         const el = document.getElementById(SCENES[i].id)
         if (el && el.offsetTop <= scrollPos) {
@@ -33,12 +33,14 @@ export default function SideSceneRail() {
   const scrollTo = (id: string) => {
     const el = document.getElementById(id)
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' })
+      const yOffset = -80
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset
+      window.scrollTo({ top: y, behavior: 'smooth' })
     }
   }
 
   return (
-    <div className="landing__scenes">
+    <div className="landing__scenes" style={{ zIndex: 40 }}>
       {SCENES.map(({ id, label }) => {
         const isActive = activeScene === id
         return (

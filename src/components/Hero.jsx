@@ -2,7 +2,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Cpu, Terminal, Award, Send } from 'lucide-react';
 import { profileData, stats, recognitions } from '../data/resumeData';
-import ModelAvatar3D from './ModelAvatar3D';
 
 export default function Hero() {
   const scrollToSection = (id) => {
@@ -18,7 +17,7 @@ export default function Hero() {
     <section
       id="hero"
       style={{
-        paddingTop: 'calc(var(--nav-h) + 30px)',
+        paddingTop: 'calc(var(--nav-h) + 20px)',
         paddingBottom: '80px',
         position: 'relative',
         zIndex: 1,
@@ -26,18 +25,19 @@ export default function Hero() {
       }}
     >
       <div className="container">
-        {/* 2 Column Layout: Intro Copy on Left, 3D Character on Right */}
+        {/* Hero Grid: Intro Copy on Left, Open 3D Space on Right for ThreeHeroCanvas */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '40px',
             alignItems: 'center',
-            marginBottom: '3.5rem'
+            marginBottom: '3.5rem',
+            minHeight: '68vh'
           }}
         >
           {/* Left Column: Intro Copy & Actions */}
-          <div>
+          <div style={{ maxWidth: '640px' }}>
             {/* Availability Badge */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -99,23 +99,18 @@ export default function Hero() {
                   fontFamily: 'var(--font-display)',
                   fontSize: 'clamp(1.1rem, 2vw, 1.45rem)',
                   fontWeight: 600,
-                  color: 'var(--text)',
-                  marginBottom: '1rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  flexWrap: 'wrap'
+                  color: 'var(--text-2)',
+                  marginBottom: '1.2rem'
                 }}
               >
-                <span>{profileData.role}</span>
+                {profileData.role}
               </div>
 
               <p
                 style={{
-                  fontSize: '1.05rem',
+                  fontSize: '1rem',
                   lineHeight: 1.7,
                   color: 'var(--text-2)',
-                  maxWidth: '560px',
                   marginBottom: '2rem'
                 }}
               >
@@ -220,22 +215,48 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Right Column: Interactive 3D Human Avatar */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="glass-card"
+          {/* Right Column: Open space letting full-screen 3D model show through with no frame */}
+          <div
             style={{
-              padding: '16px',
-              borderRadius: 'var(--radius-lg)',
-              position: 'relative',
-              overflow: 'hidden',
-              boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5)'
+              minHeight: '380px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              pointerEvents: 'none'
             }}
           >
-            <ModelAvatar3D />
-          </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              style={{
+                pointerEvents: 'auto',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '8px 18px',
+                borderRadius: '999px',
+                background: 'rgba(10, 16, 28, 0.65)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                color: 'var(--text-2)',
+                fontSize: '0.76rem',
+                fontFamily: 'var(--font-mono)'
+              }}
+            >
+              <span
+                style={{
+                  width: '6px',
+                  height: '6px',
+                  borderRadius: '50%',
+                  background: 'var(--accent)',
+                  boxShadow: '0 0 8px var(--accent)'
+                }}
+              />
+              <span>Interactive 3D Avatar · Click Character to Flip</span>
+            </motion.div>
+          </div>
         </div>
 
         {/* 4 Stats Metric Counters Grid */}
