@@ -1,357 +1,252 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Mail, MapPin, Send, CheckCircle2, MessageSquare, Copy, Check } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { profileData } from '../data/resumeData';
 
-function LinkedinIcon({ size = 18, color = '#0a66c2' }) {
+/* ── Arrow SVG (matches reference) ─────────────────────────────── */
+function ArrowIcon({ size = 16, className = '' }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-      <rect x="2" y="9" width="4" height="12" />
-      <circle cx="4" cy="4" r="2" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true" className={className}>
+      <path d="M7 17L17 7M17 7H8M17 7v9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-function GithubIcon({ size = 18 }) {
+function CheckIcon() {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 12l5 5L20 6" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
+
+/* ── Social links (Yash's profiles) ────────────────────────────── */
+const SOCIALS = [
+  {
+    label: 'LinkedIn',
+    handle: 'yash-baghel',
+    href: profileData.linkedin,
+  },
+  {
+    label: 'GitHub',
+    handle: '@MrYashBaghel',
+    href: profileData.github,
+  },
+];
+
+const EMPTY = { name: '', email: '', subject: '', message: '' };
 
 export default function Contact() {
-  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
-  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState(EMPTY);
+  const [errors, setErrors] = useState({});
+  const [sent, setSent] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const field = (key) => (e) => {
+    setForm((f) => ({ ...f, [key]: e.target.value }));
+    setErrors((err) => ({ ...err, [key]: undefined }));
+  };
+
+  const validate = () => {
+    const errs = {};
+    if (!form.name.trim()) errs.name = 'Your name, please.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'A valid email helps me reply.';
+    if (!form.message.trim() || form.message.trim().length < 10)
+      errs.message = 'Tell me a little more (10+ chars).';
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) return;
-
-    const subj = encodeURIComponent(formData.subject || `DevOps Opportunity Discussion: ${formData.name}`);
-    const body = encodeURIComponent(`${formData.message}\n\n— From: ${formData.name} (${formData.email})`);
+    if (!validate()) return;
+    const subj = encodeURIComponent(form.subject || `New message from ${form.name}`);
+    const body = encodeURIComponent(`${form.message}\n\n— ${form.name}\n${form.email}`);
     window.location.href = `mailto:yash.baghel@outlook.com?subject=${subj}&body=${body}`;
-
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: '', email: '', subject: '', message: '' });
-    }, 4500);
+    setSent(true);
+    setTimeout(() => { setSent(false); setForm(EMPTY); }, 5000);
   };
 
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText('yash.baghel@outlook.com');
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setTimeout(() => setCopied(false), 1800);
     } catch {
       window.location.href = 'mailto:yash.baghel@outlook.com';
     }
   };
 
   return (
-    <section id="contact" className="section-padding" style={{ position: 'relative', zIndex: 1 }}>
+    <section id="contact" className="section" style={{ position: 'relative', zIndex: 1 }}>
       <div className="container">
-        {/* Section Header */}
-        <div style={{ marginBottom: '3.5rem' }}>
-          <div className="section-badge">
-            <MessageSquare size={14} />
-            <span>Get in Touch</span>
-          </div>
-          <h2 className="section-title">
-            Let's Build Reliable <span className="gradient-text">Cloud Infrastructure</span>
+
+        {/* Page Head */}
+        <div className="page-head" style={{ marginBottom: '3rem' }}>
+          <span className="eyebrow" style={{ marginBottom: '1rem' }}>Contact</span>
+          <h2 className="h-xl" style={{ marginTop: '0.6rem' }}>
+            Let's build something <span className="gradient-text">together.</span>
           </h2>
-          <p className="section-subtitle">
-            Targeting DevOps Engineer, Cloud Architecture, and SRE opportunities in Delhi NCR or remote. Reach out directly or send a message below.
+          <p className="muted" style={{ marginTop: '0.8rem', maxWidth: '54ch', fontSize: '1.05rem', lineHeight: 1.7 }}>
+            Open to DevOps, Cloud & SRE opportunities. Tell me what you're working on.
           </p>
         </div>
 
-        {/* Contact Layout Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '30px'
-          }}
-        >
-          {/* Direct Contact Details Cards */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-            {/* Email Card */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              className="glass-card"
-              style={{ padding: '28px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-                <div
-                  style={{
-                    width: '46px',
-                    height: '46px',
-                    borderRadius: '12px',
-                    background: 'rgba(20, 214, 196, 0.12)',
-                    color: 'var(--accent)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}
-                >
-                  <Mail size={22} />
-                </div>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-3)', textTransform: 'uppercase' }}>
-                    Email Address
-                  </div>
-                  <a
-                    href="mailto:yash.baghel@outlook.com"
-                    style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text)', textDecoration: 'none' }}
-                  >
-                    yash.baghel@outlook.com
-                  </a>
-                </div>
+        {/* 2-col grid — form left 1.25fr, info right 0.75fr */}
+        <div className="contact">
+
+          {/* ── LEFT: Contact Form ─────────────────────────────────── */}
+          <motion.div
+            className="card contact__formwrap"
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55 }}
+          >
+            <form className="contact__form" onSubmit={handleSubmit} noValidate>
+              <div className="contact__field">
+                <label htmlFor="c-name">Name</label>
+                <input
+                  id="c-name"
+                  type="text"
+                  value={form.name}
+                  onChange={field('name')}
+                  placeholder="Your name"
+                  autoComplete="name"
+                  aria-invalid={!!errors.name}
+                />
+                {errors.name && <span className="contact__err" role="alert">{errors.name}</span>}
               </div>
 
-              <button
-                onClick={copyEmail}
-                style={{
-                  background: 'var(--surface-2)',
-                  border: '1px solid var(--border)',
-                  color: copied ? 'var(--accent)' : 'var(--text-2)',
-                  borderRadius: '999px',
-                  padding: '6px 12px',
-                  fontSize: '0.75rem',
-                  fontFamily: 'var(--font-mono)',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                {copied ? <Check size={14} /> : <Copy size={14} />}
-                <span>{copied ? 'Copied' : 'Copy'}</span>
+              <div className="contact__field">
+                <label htmlFor="c-email">Email</label>
+                <input
+                  id="c-email"
+                  type="email"
+                  value={form.email}
+                  onChange={field('email')}
+                  placeholder="you@company.com"
+                  autoComplete="email"
+                  aria-invalid={!!errors.email}
+                />
+                {errors.email && <span className="contact__err" role="alert">{errors.email}</span>}
+              </div>
+
+              <div className="contact__field">
+                <label htmlFor="c-subject">Subject</label>
+                <input
+                  id="c-subject"
+                  type="text"
+                  value={form.subject}
+                  onChange={field('subject')}
+                  placeholder="What's this about?"
+                />
+              </div>
+
+              <div className="contact__field">
+                <label htmlFor="c-message">Message</label>
+                <textarea
+                  id="c-message"
+                  rows={5}
+                  value={form.message}
+                  onChange={field('message')}
+                  placeholder="A few lines about the role, tech stack, or project…"
+                  aria-invalid={!!errors.message}
+                />
+                {errors.message && <span className="contact__err" role="alert">{errors.message}</span>}
+              </div>
+
+              <button type="submit" className="btn btn-primary contact__submit">
+                Send message
+                <ArrowIcon size={16} />
+              </button>
+            </form>
+
+            <AnimatePresence>
+              {sent && (
+                <motion.div
+                  className="contact__sent"
+                  initial={{ opacity: 0, scale: 0.96 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <span className="contact__sentmark"><CheckIcon /></span>
+                  <h3>Your message is ready</h3>
+                  <p className="muted">Your mail client just opened with everything filled in. Hit send and I'll get back to you.</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+
+          {/* ── RIGHT: Info Panel ──────────────────────────────────── */}
+          <div className="contact__info">
+
+            {/* Available card */}
+            <motion.div
+              className="card contact__avail"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45 }}
+            >
+              <span className="contact__status">
+                <span className="glow-dot" />
+                Available for new work
+              </span>
+              <p className="muted">{profileData.availability}</p>
+            </motion.div>
+
+            {/* Email card */}
+            <motion.div
+              className="card contact__email"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: 0.06 }}
+            >
+              <span className="eyebrow" style={{ marginBottom: '0.8rem' }}>Direct</span>
+              <button className="contact__emailbtn" onClick={copyEmail}>
+                <span>yash.baghel@outlook.com</span>
+                <span className="contact__copy mono">{copied ? 'Copied ✓' : 'Copy'}</span>
               </button>
             </motion.div>
 
-            {/* Location Card */}
+            {/* Location card */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
+              className="card"
+              initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="glass-card"
-              style={{ padding: '28px', display: 'flex', alignItems: 'center', gap: '20px' }}
+              transition={{ duration: 0.45, delay: 0.12 }}
             >
-              <div
-                style={{
-                  width: '46px',
-                  height: '46px',
-                  borderRadius: '12px',
-                  background: 'rgba(74, 147, 240, 0.12)',
-                  color: 'var(--primary)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0
-                }}
-              >
-                <MapPin size={22} />
-              </div>
-              <div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: 'var(--text-3)', textTransform: 'uppercase' }}>
-                  Base Location
-                </div>
-                <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text)' }}>
-                  Faridabad, Haryana, INDIA
-                </div>
-              </div>
+              <span className="eyebrow" style={{ marginBottom: '0.6rem' }}>Based in</span>
+              <p className="contact__loc">Faridabad, Haryana, INDIA</p>
+              <p className="muted mono" style={{ fontSize: '0.82rem' }}>IST · UTC+5:30</p>
             </motion.div>
 
-            {/* Social Links */}
-            <div style={{ display: 'flex', gap: '14px' }}>
-              <a
-                href={profileData.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="glass-card"
-                style={{
-                  flex: 1,
-                  padding: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  color: 'var(--text)',
-                  textDecoration: 'none',
-                  fontWeight: 600,
-                  fontSize: '0.9rem'
-                }}
-              >
-                <LinkedinIcon size={18} />
-                <span>LinkedIn</span>
-              </a>
-
-              <a
-                href={profileData.github}
-                target="_blank"
-                rel="noreferrer"
-                className="glass-card"
-                style={{
-                  flex: 1,
-                  padding: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  color: 'var(--text)',
-                  textDecoration: 'none',
-                  fontWeight: 600,
-                  fontSize: '0.9rem'
-                }}
-              >
-                <GithubIcon size={18} />
-                <span>GitHub</span>
-              </a>
-            </div>
-          </div>
-
-          {/* Interactive Message Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="glass-card"
-            style={{ padding: '36px' }}
-          >
-            <h3 className="font-display" style={{ fontSize: '1.3rem', fontWeight: 700, marginBottom: '1.5rem', color: 'var(--text)' }}>
-              Send an Instant Inquiry
-            </h3>
-
-            {submitted ? (
-              <div
-                style={{
-                  padding: '30px',
-                  borderRadius: 'var(--radius)',
-                  background: 'rgba(20, 214, 196, 0.1)',
-                  border: '1px solid rgba(20, 214, 196, 0.3)',
-                  textAlign: 'center',
-                  color: 'var(--accent)'
-                }}
-              >
-                <CheckCircle2 size={44} style={{ margin: '0 auto 12px' }} />
-                <h4 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '6px' }}>Message Prepared!</h4>
-                <p style={{ fontSize: '0.9rem', color: 'var(--text-2)' }}>
-                  Your mail client has been opened with your inquiry prefilled for <strong>yash.baghel@outlook.com</strong>.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: 'var(--text-3)', marginBottom: '6px' }}>
-                    YOUR NAME
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Alex Sharma"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      borderRadius: 'var(--radius-sm)',
-                      background: 'var(--surface-2)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text)',
-                      fontSize: '0.92rem',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: 'var(--text-3)', marginBottom: '6px' }}>
-                    YOUR EMAIL
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="e.g. alex@company.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      borderRadius: 'var(--radius-sm)',
-                      background: 'var(--surface-2)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text)',
-                      fontSize: '0.92rem',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: 'var(--text-3)', marginBottom: '6px' }}>
-                    SUBJECT
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. DevOps Engineer Opportunity / Consulting"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      borderRadius: 'var(--radius-sm)',
-                      background: 'var(--surface-2)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text)',
-                      fontSize: '0.92rem',
-                      outline: 'none'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.8rem', fontFamily: 'var(--font-mono)', color: 'var(--text-3)', marginBottom: '6px' }}>
-                    MESSAGE
-                  </label>
-                  <textarea
-                    rows={4}
-                    required
-                    placeholder="Tell me about the role, tech stack, or infrastructure project..."
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '12px 16px',
-                      borderRadius: 'var(--radius-sm)',
-                      background: 'var(--surface-2)',
-                      border: '1px solid var(--border)',
-                      color: 'var(--text)',
-                      fontSize: '0.92rem',
-                      outline: 'none',
-                      resize: 'vertical'
-                    }}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  style={{ width: '100%', marginTop: '6px' }}
+            {/* Social links */}
+            <motion.div
+              className="contact__socials"
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45, delay: 0.18 }}
+            >
+              {SOCIALS.map(({ label, handle, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="card contact__social"
                 >
-                  <Send size={16} />
-                  <span>Send Message</span>
-                </button>
-              </form>
-            )}
-          </motion.div>
+                  <span>{label}</span>
+                  <span className="muted">{handle}</span>
+                  <ArrowIcon size={16} className="contact__socialarrow" />
+                </a>
+              ))}
+            </motion.div>
+
+          </div>
         </div>
       </div>
     </section>

@@ -299,3 +299,192 @@ body {
   .btn-primary { padding: 10px 20px; font-size: 0.9rem; }
   .section-padding { padding-top: 60px; padding-bottom: 60px; }
 }
+
+/* ──────────────────────────────────────────────────────────────────
+   CONTACT PAGE — matches reference design (portfolio-bay-seven…)
+   ─────────────────────────────────────────────────────────────── */
+
+/* h-xl helper (if not in globals) */
+.h-xl {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.6rem);
+  letter-spacing: -0.03em;
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+/* page-head */
+.page-head { margin-bottom: 3rem; }
+
+/* ─── Contact grid ─── */
+.contact {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: start;
+  gap: 1.6rem;
+}
+@media (min-width: 920px) {
+  .contact { grid-template-columns: 1.25fr 0.75fr; }
+}
+
+/* ─── Form wrap ─── */
+.contact__formwrap {
+  padding: clamp(1.6rem, 3vw, 2.4rem);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ─── Form fields ─── */
+.contact__form { gap: 1.2rem; display: grid; }
+
+.contact__field { flex-direction: column; gap: 0.5rem; display: flex; }
+
+.contact__field label {
+  letter-spacing: 0.04em;
+  color: var(--text-2);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.contact__field input,
+.contact__field textarea {
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  width: 100%;
+  color: var(--text);
+  resize: vertical;
+  transition: border-color 0.3s var(--ease), background 0.3s var(--ease), box-shadow 0.3s var(--ease);
+  padding: 0.9rem 1rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.contact__field input::placeholder,
+.contact__field textarea::placeholder { color: var(--muted, #6b7a92); }
+
+.contact__field input:focus,
+.contact__field textarea:focus {
+  border-color: var(--primary);
+  background: var(--surface-2);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
+  outline: none;
+}
+
+.contact__err { color: var(--error, #ff9b7a); font-size: 0.78rem; font-weight: 500; }
+
+.contact__submit { justify-self: start; margin-top: 0.4rem; }
+
+/* ─── Sent overlay ─── */
+.contact__sent {
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  text-align: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 2rem;
+  display: flex;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.contact__sentmark {
+  background: var(--primary);
+  width: 64px;
+  height: 64px;
+  color: var(--on-primary, #fff);
+  box-shadow: 0 0 30px var(--brand-glow);
+  border-radius: 99px;
+  place-items: center;
+  margin-bottom: 0.4rem;
+  display: grid;
+}
+
+/* ─── Right info column ─── */
+.contact__info { gap: 1rem; display: grid; }
+
+/* Available card */
+.contact__avail .contact__status {
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  display: flex;
+}
+
+/* Email card */
+.contact__email .eyebrow { margin-bottom: 0.8rem; }
+
+.contact__emailbtn {
+  width: 100%;
+  font-family: var(--font-display);
+  color: var(--text);
+  word-break: break-all;
+  text-align: left;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: clamp(0.88rem, 2.4vw, 1.1rem);
+  font-weight: 600;
+  display: flex;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.contact__copy {
+  color: var(--primary);
+  border: 1px solid var(--border-strong);
+  transition: all 0.3s var(--ease);
+  border-radius: 99px;
+  flex: none;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.72rem;
+  white-space: nowrap;
+}
+
+.contact__emailbtn:hover .contact__copy {
+  background: var(--primary);
+  color: var(--on-primary, #fff);
+  border-color: var(--primary);
+}
+
+/* Location card */
+.contact__loc {
+  font-family: var(--font-display);
+  margin: 0.5rem 0 0.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Social links */
+.contact__socials { gap: 0.8rem; display: grid; }
+
+.contact__social {
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.3rem;
+  display: flex;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.contact__social span:first-child { font-weight: 600; }
+
+.contact__social .muted { flex: 1; font-size: 0.82rem; }
+
+.contact__socialarrow {
+  color: var(--text-3);
+  transition: transform 0.3s var(--ease), color 0.3s var(--ease);
+  flex-shrink: 0;
+}
+
+.contact__social:hover .contact__socialarrow {
+  color: var(--primary);
+  transform: translate(3px, -3px);
+}
