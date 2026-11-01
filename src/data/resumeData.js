@@ -256,6 +256,52 @@ export const projects = [
         "Streamlined release pipelines with automated integration testing gates."
       ]
     }
+  },
+  {
+    id: "multi-az-ha-disaster-recovery",
+    category: "Kubernetes & Cloud",
+    title: "Multi-AZ High Availability & Disaster Recovery Architecture",
+    tagline: "Zero-RPO failover architecture across AWS availability zones with automated recovery.",
+    summary: "Designed and deployed a production-grade Multi-AZ architecture on AWS with RDS Multi-AZ standby, cross-region S3 replication, and automated failover runbooks to guarantee near-zero downtime for critical services.",
+    impact: [
+      { label: "Recovery Time Objective (RTO)", prefix: "↓", value: 90, suffix: "%", before: "4 hrs", after: "< 15 mins" },
+      { label: "Service Availability SLA", prefix: "↑", value: 99.95, suffix: "%", before: "99.2%", after: "99.95%" },
+      { label: "Unplanned Outage Cost", prefix: "↓", value: 100, suffix: "%", before: "High", after: "Near Zero" }
+    ],
+    architecture: ["AWS Multi-AZ", "RDS Multi-AZ", "S3 Cross-Region Replication", "Route 53 Failover", "CloudWatch Alarms", "Terraform"],
+    details: {
+      problem: "Single-AZ architecture exposed critical workloads to full regional failure risk. Manual recovery runbooks caused hours of downtime and data inconsistency during incidents.",
+      solution: "Re-architected the production stack across 3 AWS Availability Zones with RDS Multi-AZ standby, automated Route 53 health-check failover, and S3 cross-region replication, all provisioned via Terraform for repeatability.",
+      highlights: [
+        "Configured RDS Multi-AZ with automated standby promotion reducing database failover to under 60 seconds.",
+        "Implemented Route 53 health-check-driven DNS failover to switch traffic between AZs without manual intervention.",
+        "Enabled S3 cross-region replication to guarantee RPO of zero for critical object storage.",
+        "Authored Terraform modules for the entire HA topology — reproducible in any AWS region within minutes."
+      ]
+    }
+  },
+  {
+    id: "devsecops-pipeline-okta-sonar",
+    category: "CI/CD & Optimization",
+    title: "DevSecOps Pipeline with OKTA SSO & SonarQube Security Gates",
+    tagline: "Shifting security left — identity-aware pipelines with automated code quality enforcement.",
+    summary: "Modernized the enterprise CI/CD delivery chain by integrating OKTA SSO for role-based pipeline access, embedding SonarQube static analysis, and automating vulnerability scanning into every GitLab merge-request gate.",
+    impact: [
+      { label: "Security Vulnerabilities Caught Pre-Prod", prefix: "↑", value: 94, suffix: "%", before: "~30%", after: "~95%" },
+      { label: "Unauthorized Pipeline Access Events", prefix: "↓", value: 100, suffix: "%", before: "Recurring", after: "Zero" },
+      { label: "Mean Time to Compliance Sign-off", prefix: "↓", value: 70, suffix: "%", before: "3 days", after: "< 1 day" }
+    ],
+    architecture: ["GitLab CI/CD", "OKTA SSO", "SonarQube", "Docker", "HashiCorp Vault", "Bash / Shell"],
+    details: {
+      problem: "Developers could trigger production deployments without security review, and static code analysis was run manually and inconsistently — leaving vulnerabilities to reach production undetected.",
+      solution: "Integrated OKTA SSO into GitLab runner authentication for RBAC-controlled pipeline access, embedded SonarQube quality gates as mandatory merge-request checks, and wired Vault dynamic secrets into every pipeline stage to eliminate hardcoded credentials.",
+      highlights: [
+        "Enforced OKTA-backed RBAC so only authorised engineers can trigger production-stage pipelines.",
+        "Configured SonarQube as a required GitLab CI/CD gate — pipelines fail automatically on critical OWASP findings.",
+        "Replaced all hardcoded CI/CD secrets with HashiCorp Vault dynamic credentials rotated per pipeline run.",
+        "Reduced compliance sign-off from 3 days to under 1 day by providing auditors automated quality reports per release."
+      ]
+    }
   }
 ];
 
