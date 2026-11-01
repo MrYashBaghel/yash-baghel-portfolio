@@ -219,44 +219,9 @@ export default function Hero() {
           <div
             style={{
               minHeight: '380px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-              alignItems: 'center',
               pointerEvents: 'none'
             }}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              style={{
-                pointerEvents: 'auto',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '8px 18px',
-                borderRadius: '999px',
-                background: 'rgba(10, 16, 28, 0.65)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                color: 'var(--text-2)',
-                fontSize: '0.76rem',
-                fontFamily: 'var(--font-mono)'
-              }}
-            >
-              <span
-                style={{
-                  width: '6px',
-                  height: '6px',
-                  borderRadius: '50%',
-                  background: 'var(--accent)',
-                  boxShadow: '0 0 8px var(--accent)'
-                }}
-              />
-              <span>Interactive 3D Avatar · Click Character to Flip</span>
-            </motion.div>
-          </div>
+          />
         </div>
 
         {/* 4 Stats Metric Counters Grid */}

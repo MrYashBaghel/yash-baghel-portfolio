@@ -165,10 +165,7 @@ export default function Contact() {
                   Base Location
                 </div>
                 <div style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text)' }}>
-                  Noida, Uttar Pradesh, 201301
-                </div>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text-2)', marginTop: '2px' }}>
-                  Open to Hybrid (Delhi NCR) & Remote roles
+                  Faridabad, Haryana, INDIA
                 </div>
               </div>
             </motion.div>

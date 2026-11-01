@@ -9,7 +9,7 @@ export const profileData = {
   email: "yash.baghel@outlook.com",
   linkedin: "https://www.linkedin.com/in/yash-baghel",
   github: "https://github.com/MrYashBaghel",
-  availability: "Open to DevOps, SRE & Cloud Engineering opportunities (Delhi NCR / Remote)",
+  availability: "Faridabad, Haryana, INDIA · AVAILABLE",
   experienceYears: "5+ Years"
 };
 

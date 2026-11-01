@@ -565,41 +565,7 @@ export default function ThreeHeroCanvas({ theme = 'dark' }: Props) {
         }}
       />
 
-      {/* Interactive backflip trigger button */}
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '2.5rem',
-          right: '2.5rem',
-          zIndex: 10,
-          display: 'none',
-          pointerEvents: 'auto',
-        }}
-        className="character-action-pill"
-      >
-        <button
-          onClick={() => triggerFlipRef.current?.()}
-          disabled={isFlipping}
-          className="btn btn-primary"
-          style={{
-            padding: '0.45rem 1rem',
-            fontSize: '0.78rem',
-            gap: '0.45rem',
-            borderRadius: '99px',
-            boxShadow: '0 8px 24px -6px var(--brand-glow)',
-          }}
-        >
-          <span>{isFlipping ? '🤸 Acrobatics in progress...' : '⚡ Click Character for Backflip'}</span>
-        </button>
-      </div>
-
-      <style>{`
-        @media (min-width: 900px) {
-          .character-action-pill {
-            display: block !important;
-          }
-        }
-      `}</style>
+      {/* Backflip interaction: click the 3D character directly */}
     </div>
   )
 }
